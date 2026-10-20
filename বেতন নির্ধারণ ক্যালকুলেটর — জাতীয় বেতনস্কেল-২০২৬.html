@@ -1,0 +1,1390 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="description" content="জাতীয় বেতনস্কেল-২০২৬ অনুযায়ী বেতন নির্ধারণ ও বেতন বিবরণী সফটওয়্যার">
+<title>বেতন নির্ধারণ ক্যালকুলেটর — জাতীয় বেতনস্কেল-২০২৬</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --primary:#1F4E78;
+  --primary-soft:#EAF0F7;
+  --green:#29B95C;
+  --green-bg:#EFFBF3;
+  --green-bg-focus:#FFFFFF;
+  --green-border:rgba(41,185,92,.65);
+  --green-text:#1B8A46;
+  --res-bg:#E4F5FE;
+  --res-text:#0669A8;
+  --bg:#F3F6FA;
+  --card:#FFFFFF;
+  --text:#1C2733;
+  --muted:#66788A;
+  --border:#DCE4EC;
+  --thead:#1F4E78;
+  --rowhead-bg:#E9EFF6;
+  --shadow:0 2px 12px rgba(31,78,120,.08);
+  --warn:#C62828;
+  --warn-bg:rgba(198,40,40,.08);
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --primary:#7FB3E0;
+    --primary-soft:#172635;
+    --green-bg:#102A1D;
+    --green-bg-focus:#16222C;
+    --green-border:rgba(41,185,92,.75);
+    --green-text:#4FDD85;
+    --res-bg:#0C2B3D;
+    --res-text:#5AC7F2;
+    --bg:#0E151C;
+    --card:#151E27;
+    --text:#E7EEF5;
+    --muted:#93A4B5;
+    --border:#26313D;
+    --thead:#1B4E7C;
+    --rowhead-bg:#17263A;
+    --shadow:0 2px 12px rgba(0,0,0,.4);
+    --warn:#FF7A7A;
+    --warn-bg:rgba(255,122,122,.1);
+  }
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  font-family:"Noto Sans Bengali","Hind Siliguri","SolaimanLipi",system-ui,-apple-system,"Segoe UI",sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.7;
+  font-size:15.5px;
+}
+.app-header{
+  background:linear-gradient(135deg,#1F4E78 0%,#2A6DA8 100%);
+  color:#fff;
+  box-shadow:0 2px 12px rgba(31,78,120,.28);
+}
+.hdr-inner{
+  max-width:1180px;margin:0 auto;padding:15px 16px;
+  display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;
+}
+.app-header h1{margin:0;font-size:clamp(17px,2.5vw,23px);line-height:1.5;font-weight:700}
+.app-header p{margin:2px 0 0;font-size:13.5px;opacity:.88}
+.hdr-actions{display:flex;gap:8px;flex-shrink:0}
+.btn{
+  font:inherit;font-weight:600;border-radius:8px;padding:8px 17px;cursor:pointer;
+  border:1.5px solid transparent;transition:filter .15s,background .15s,transform .1s;
+}
+.btn:hover{filter:brightness(1.07)}
+.btn:active{transform:translateY(1px)}
+.btn-ghost{background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.55)}
+.btn-solid{background:#fff;color:#1F4E78}
+.legend{
+  display:flex;flex-wrap:wrap;gap:10px;justify-content:center;
+  max-width:1180px;margin:16px auto 4px;padding:0 14px;
+}
+.lg{
+  font-size:13px;font-weight:600;padding:5px 13px;border-radius:999px;
+  border:1px solid var(--border);background:var(--card);color:var(--muted);
+}
+.lg-in{border-color:var(--green-border);background:var(--green-bg);color:var(--green-text)}
+.lg-res{border-color:rgba(0,176,240,.5);background:var(--res-bg);color:var(--res-text)}
+main{max-width:1180px;margin:0 auto;padding:16px 14px 44px}
+.card{
+  background:var(--card);border:1px solid var(--border);border-radius:12px;
+  box-shadow:var(--shadow);padding:18px 16px 20px;margin-bottom:18px;
+}
+.card h2{
+  margin:0 0 14px;font-size:17px;color:var(--primary);font-weight:700;
+  display:flex;align-items:center;gap:9px;flex-wrap:wrap;line-height:1.5;
+}
+.card h2::before{
+  content:"";width:5px;height:19px;background:var(--green);
+  border-radius:3px;display:inline-block;flex-shrink:0;
+}
+.card h2 .hint{font-size:12.5px;color:var(--muted);font-weight:500}
+.emp-grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+.field{display:flex;flex-direction:column;gap:5px;font-size:13.5px;font-weight:600;color:var(--muted)}
+.in{
+  width:100%;font:inherit;font-size:15.5px;padding:8px 11px;
+  border:1.5px solid var(--green-border);background:var(--green-bg);color:var(--text);
+  border-radius:8px;outline:none;line-height:1.5;
+  transition:border-color .15s,box-shadow .15s,background .15s;
+}
+.in::placeholder{color:var(--muted);opacity:.75;font-weight:400}
+.in:focus{
+  border-color:var(--green);background:var(--green-bg-focus);
+  box-shadow:0 0 0 3px rgba(41,185,92,.22);
+}
+.in-num{text-align:right;font-weight:600}
+.bold-input{font-weight:700}
+textarea.in{min-height:76px;resize:vertical;line-height:1.65;font-weight:400}
+.salary-layout{display:block}
+@media (min-width:992px){
+  .salary-layout{display:grid;grid-template-columns:minmax(0,1fr) 296px;gap:18px;align-items:start}
+}
+.summary h3{margin:0 0 8px;font-size:15.5px;color:var(--primary)}
+@media (min-width:992px){.summary{position:sticky;top:14px}}
+.sum-item{
+  display:flex;justify-content:space-between;align-items:center;gap:8px;
+  padding:11px 0;border-bottom:1px dashed var(--border);
+}
+.sum-item:last-child{border-bottom:none}
+.sum-date{font-size:13.5px;color:var(--muted);font-weight:600}
+.sum-val{
+  font-weight:700;font-size:1.12rem;color:var(--res-text);
+  background:var(--res-bg);padding:4px 10px;border-radius:8px;white-space:nowrap;
+}
+table.steps{width:100%;border-collapse:collapse;font-size:15.5px}
+.steps th{
+  background:var(--thead);color:#fff;padding:10px;text-align:left;
+  font-weight:600;font-size:14.5px;
+}
+.steps td{border:1px solid var(--border);padding:9px 10px;vertical-align:top}
+.c-no{width:54px;text-align:center;color:var(--muted);font-weight:700}
+.c-desc{min-width:150px}
+.c-val{width:196px}
+.c-exp{width:35%;color:var(--muted);font-size:13.5px;line-height:1.75}
+.c-exp textarea{min-height:88px}
+tr.row-head td{
+  background:var(--rowhead-bg);color:var(--primary);font-weight:700;
+  text-align:center;font-size:15px;
+}
+.auto-out{display:block;text-align:right;font-weight:600;color:var(--text)}
+.res-out{
+  display:block;text-align:right;font-weight:700;color:var(--res-text);
+  background:var(--res-bg);border-radius:8px;padding:7px 11px;font-size:1.08rem;
+}
+.helper{
+  margin-top:7px;font-size:12.5px;color:var(--muted);
+  background:var(--primary-soft);border-radius:8px;padding:8px 10px;line-height:1.65;
+}
+.helper[hidden]{display:none}
+.mini-note{
+  margin-top:5px;font-size:12px;color:var(--muted);line-height:1.6;
+}
+.mini-note[hidden]{display:none}
+.btn-mini{
+  display:inline-block;margin-top:6px;font:inherit;font-size:12.5px;font-weight:600;
+  background:var(--green);color:#fff;border:none;border-radius:6px;
+  padding:4px 11px;cursor:pointer;
+}
+.btn-mini:hover{filter:brightness(1.07)}
+.warn{
+  color:var(--warn);font-size:13.5px;font-weight:600;background:var(--warn-bg);
+  border:1px solid rgba(198,40,40,.35);border-radius:8px;
+  padding:8px 11px;margin-top:13px;line-height:1.7;
+}
+.warn:empty{display:none;padding:0;margin:0;border:none}
+.allow-grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(235px,1fr))}
+.allow-\boxed{
+  border:1px solid var(--border);border-radius:10px;padding:14px;
+  background:var(--primary-soft);
+}
+.allow-box h3{
+  margin:0 0 10px;font-size:15px;color:var(--primary);font-weight:700;line-height:1.5;
+}
+.allow-box .field{margin-bottom:10px}
+.allow-box .field:last-child{margin-bottom:0}
+.radios{display:flex;gap:16px;flex-wrap:wrap;font-size:14.5px;margin-bottom:10px}
+.radios label{display:flex;align-items:center;gap:6px;cursor:pointer;font-weight:600;color:var(--text)}
+.radios input{accent-color:var(--green);width:16px;height:16px;cursor:pointer}
+.hidden{display:none !important}
+.result-line{
+  display:flex;justify-content:space-between;align-items:center;gap:10px;
+  margin-top:10px;font-weight:600;
+}
+.result-line .res-out{display:inline-block;padding:5px 11px;font-size:1.02rem}
+.muted{font-size:12.5px;color:var(--muted);margin:7px 0 0;line-height:1.65}
+table.stmt{width:100%;border-collapse:collapse;font-size:15.5px}
+.stmt th{
+  background:var(--thead);color:#fff;padding:10px 8px;text-align:center;
+  font-weight:600;font-size:14.5px;
+}
+.stmt th:first-child{text-align:left}
+.stmt td{border:1px solid var(--border);padding:10px 9px;text-align:right}
+.stmt td.lbl{text-align:left;font-weight:600;background:var(--primary-soft);width:33%}
+.stmt tr.gross td{font-weight:700}
+.stmt tr.net td{
+  background:var(--res-bg);color:var(--res-text);font-weight:700;font-size:1.15rem;
+}
+.words{
+  margin-top:15px;background:var(--primary-soft);border:1px solid var(--border);
+  border-radius:10px;padding:12px 15px;font-size:14.5px;line-height:2;
+}
+.words b{color:var(--primary)}
+.note-\boxed{
+  margin-top:13px;background:var(--primary-soft);border:1px solid var(--border);
+  border-radius:10px;padding:10px 14px;font-size:14px;line-height:1.8;
+}
+.note-box b{color:var(--primary)}
+.note-box[hidden]{display:none}
+.print-only{display:none}
+.scale-grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));align-items:end}
+.scale-grid .field{min-width:0}
+.scale-msg{
+  margin-top:12px;font-size:13.5px;font-weight:600;background:var(--green-bg);
+  border:1px solid var(--green-border);border-radius:8px;
+  padding:8px 11px;line-height:1.7;color:var(--green-text);white-space:pre-line;
+}
+.scale-msg:empty{display:none;padding:0;border:none;margin:0}
+table.scale-ref{width:100%;border-collapse:collapse;font-size:14.5px;margin-top:13px}
+table.scale-ref caption{
+  caption-side:top;text-align:left;font-weight:700;color:var(--primary);
+  font-size:14.5px;padding:0 0 8px;
+}
+table.scale-ref th{
+  background:var(--thead);color:#fff;padding:8px 9px;text-align:center;
+  font-weight:600;font-size:13.5px;position:sticky;top:0;
+}
+table.scale-ref th:first-child{text-align:center}
+table.scale-ref td{
+  border:1px solid var(--border);padding:7px 9px;text-align:right;
+  font-variant-numeric:tabular-nums;white-space:nowrap;
+}
+table.scale-ref td.yr{text-align:center;font-weight:700;background:var(--rowhead-bg);color:var(--primary)}
+table.scale-ref td.cur-col{background:var(--res-bg);color:var(--res-text);font-weight:700;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+table.scale-ref tr.on td.tot{background:var(--green-bg);color:var(--green-text);font-weight:700;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.scale-ref-wrap{max-height:430px;overflow:auto;border:1px solid var(--border);border-radius:10px}
+@media (max-width:767.98px){
+  .scale-ref-wrap{border:none;max-height:none}
+  table.scale-ref{font-size:13px}
+  table.scale-ref td,table.scale-ref th{padding:6px 7px}
+}
+.app-footer{
+  margin-top:26px;background:var(--card);border:1px solid var(--border);
+  border-radius:12px;box-shadow:var(--shadow);padding:16px 18px;text-align:center;
+  font-size:13.5px;line-height:1.85;color:var(--muted);
+}
+.app-footer .dev-name{color:var(--primary);font-weight:700;font-size:14.5px}
+.app-footer .dev-links{margin-top:7px;display:flex;flex-wrap:wrap;gap:8px 16px;justify-content:center}
+.app-footer a{color:var(--res-text);text-decoration:none;font-weight:600;word-break:break-word}
+.app-footer a:hover{text-decoration:underline}
+.print-credit{
+  margin-top:26px;border-top:1px solid #000;padding-top:9px;text-align:center;
+  font-size:11px;line-height:1.7;color:#000;
+}
+.print-credit .pc-links{margin-top:2px}
+.sign-row{display:flex;gap:18px;margin-top:44px}
+.sign-\boxed{flex:1;text-align:center;padding-top:54px;border-top:1px solid #000;font-size:13.5px}
+.print-head{text-align:center}
+.print-head h2{justify-content:center;font-size:18px;margin-bottom:6px}
+.print-head h2::before{display:none}
+.print-head h2 .sub{display:block;width:100%;font-size:13px;font-weight:500;color:#444}
+.print-emp{
+  display:flex;flex-wrap:wrap;gap:4px 26px;font-size:14.5px;
+  border-bottom:1.5px solid #000;padding-bottom:9px;margin-bottom:14px;
+}
+.print-date{text-align:right;font-size:13.5px;margin-top:16px}
+@keyframes flashAnim{
+  0%{background-color:rgba(0,176,240,.55)}
+  100%{background-color:transparent}
+}
+.flash{animation:flashAnim .6s ease-out}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none !important;transition:none !important}
+}
+@media (max-width:767.98px){
+  body{font-size:15px}
+  .card{padding:15px 12px 17px}
+  table.steps,table.steps tbody,table.steps tr,table.steps td{display:block;width:100%}
+  table.steps thead{display:none}
+  table.steps tr{
+    border:1px solid var(--border);border-radius:10px;margin-bottom:12px;
+    padding:7px 12px 11px;background:var(--card);box-shadow:var(--shadow);
+  }
+  table.steps tr.row-head{background:var(--rowhead-bg);padding:10px 12px}
+  table.steps td{
+    border:none;padding:7px 0;display:flex;flex-direction:column;gap:4px;text-align:right;
+  }
+  table.steps td::before{
+    content:attr(data-label);font-size:11.5px;font-weight:700;color:var(--muted);
+    letter-spacing:.02em;text-align:left;
+  }
+  table.steps td.c-exp{text-align:left}
+  table.steps td.c-val{width:100%}
+  .c-exp textarea{min-height:66px}
+  table.stmt,table.stmt tbody,table.stmt tr,table.stmt td{display:block;width:100%}
+  table.stmt thead{display:none}
+  table.stmt tr{
+    border:1px solid var(--border);border-radius:10px;margin-bottom:12px;
+    padding:9px 13px;background:var(--card);box-shadow:var(--shadow);
+  }
+  table.stmt td{
+    border:none;padding:5px 0;text-align:right;
+    display:flex;justify-content:space-between;align-items:center;gap:12px;
+  }
+  table.stmt td.lbl{
+    display:block;font-weight:700;text-align:left;background:none;
+    border-bottom:1px dashed var(--border);padding-bottom:7px;margin-bottom:4px;
+  }
+  table.stmt td:not(.lbl)::before{
+    content:attr(data-label);font-weight:600;color:var(--muted);
+    font-size:12.5px;text-align:left;flex:0 0 auto;
+  }
+  table.stmt tr.net td{font-size:1.1rem}
+  .sum-val{font-size:1.05rem}
+}
+@media print{
+  @page{size:A4;margin:12mm}
+  html,body{background:#fff !important;color:#000 !important}
+  .no-print{display:none !important}
+  .print-only{display:block !important}
+  .card{
+    border:none !important;box-shadow:none !important;
+    padding:0 !important;margin:0 !important;background:#fff !important;
+  }
+  .print-head h2::before{display:none !important}
+  .print-emp{border-bottom:1.5px solid #000 !important}
+  table.stmt{font-size:13.5px}
+  .stmt th{background:#1F4E78 !important;color:#fff !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .stmt td.lbl{background:#F0F0F0 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .stmt tr.net td{background:#E4F5FE !important;color:#000 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .words{background:#F7F7F7 !important;border-color:#CCC !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .words b{color:#000 !important}
+  .note-\boxed{background:#F7F7F7 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .warn{display:none !important}
+  .sign-row{display:flex !important}
+  .scale-ref-wrap{max-height:none !important;overflow:visible !important;border:none !important}
+  table.scale-ref{font-size:11px !important}
+  table.scale-ref th{background:#1F4E78 !important;color:#fff !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  table.scale-ref td.yr{background:#F0F0F0 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  table.scale-ref td.cur-col{background:#E4F5FE !important;color:#000 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .scale-msg{background:#F7F7F7 !important;border-color:#CCC !important;color:#000 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .app-footer{display:none !important}
+  .print-credit{display:block !important}
+}
+</style>
+</head>
+<body>
+
+<header class="app-header no-print">
+  <div class="hdr-inner">
+    <div>
+      <h1>বেতন নির্ধারণ ও বেতন বিবরণী সফটওয়্যার</h1>
+      <p>জাতীয় বেতনস্কেল-২০২৬ অনুযায়ী</p>
+    </div>
+    <div class="hdr-actions">
+      <button type="button" class="btn btn-ghost" id="btnReset">রিসেট</button>
+      <button type="button" class="btn btn-solid" id="btnPrint">প্রিন্ট</button>
+    </div>
+  </div>
+</header>
+
+<div class="legend no-print">
+  <span class="lg lg-in">🟩 ইনপুট</span>
+  <span class="lg">⬜ স্বয়ংক্রিয়</span>
+  <span class="lg lg-res">🟦 চূড়ান্ত ফলাফল</span>
+</div>
+
+<main>
+
+<section class="card no-print">
+  <h2>ক. কর্মচারীর তথ্য <span class="hint">(ঐচ্ছিক — শুধু বিবরণীতে ছাপার জন্য)</span></h2>
+  <div class="emp-grid">
+    <label class="field">নাম
+      <input type="text" class="in" id="empName" placeholder="কর্মচারীর নাম">
+    </label>
+    <label class="field">পদবি
+      <input type="text" class="in" id="empPos" placeholder="যেমন: সহকারী কর্মকর্তা">
+    </label>
+    <label class="field">আইডি / কর্মচারী নম্বর
+      <input type="text" class="in" id="empId" placeholder="যেমন: ১২৩৪৫">
+    </label>
+    <label class="field">দপ্তর
+      <input type="text" class="in" id="empDept" placeholder="যেমন: অর্থ বিভাগ">
+    </label>
+  </div>
+</section>
+
+<div class="salary-layout">
+
+<section class="card no-print">
+  <h2>খ. বেতন নির্ধারণ</h2>
+
+  <div class="scale-grid" id="gradeStepGrid">
+    <label class="field">গ্রেড (২০১৫ স্কেল)
+      <select class="in" id="gradeSel"></select>
+    </label>
+    <label class="field">২০১৫ স্কেলের ধাপ (৩০-০৬-২০২৬ এর মূল বেতন)
+      <select class="in" id="stepSel"></select>
+    </label>
+  </div>
+  <div class="helper" id="gradeConfNote" hidden></div>
+
+  <table class="steps">
+    <thead>
+      <tr><th>ক্রম</th><th>বিবরণ</th><th>মান</th><th>ব্যাখ্যা</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="c-no" data-label="ক্রম">১</td>
+        <td class="c-desc" data-label="বিবরণ">৩০-০৬-২০২৬ তারিখে গৃহীত মূল বেতন</td>
+        <td class="c-val" data-label="মান">
+          <input type="text" inputmode="numeric" min="0" class="in in-num" id="c2" value="০" aria-label="৩০-০৬-২০২৬ তারিখে গৃহীত মূল বেতন">
+        </td>
+        <td class="c-exp" data-label="ব্যাখ্যা"></td>
+      </tr>
+      <tr class="row-head">
+        <td colspan="4">জাতীয় বেতনস্কেল-২০২৬ অনুযায়ী ০১-০৭-২০২৬ তারিখে।</td>
+      </tr>
+      <tr>
+        <td class="c-no" data-label="ক্রম">৩</td>
+        <td class="c-desc" data-label="বিবরণ">জাতীয় বেতনস্কেল-২০২৬ অনুযায়ী সম/উচ্চধাপ প্রাপ্য গ্রেড ও স্কেল</td>
+        <td class="c-val" data-label="মান">
+          <input type="text" inputmode="numeric" min="0" class="in in-num bold-input" id="c4" value="০" aria-label="সম/উচ্চধাপ প্রাপ্য গ্রেড ও স্কেল">
+          <div class="mini-note" id="c4Note" hidden></div>
+        </td>
+        <td class="c-exp" data-label="ব্যাখ্যা"><span id="exp4"></span></td>
+      </tr>
+      <tr>
+        <td class="c-no" data-label="ক্রম">৪</td>
+        <td class="c-desc" data-label="বিবরণ">০১-০৭-২০২৬ তারিখে নির্ধারিত বেতন</td>
+        <td class="c-val" data-label="মান"><output class="auto-out" id="v5">০</output></td>
+        <td class="c-exp" data-label="ব্যাখ্যা"></td>
+      </tr>
+      <tr>
+        <td class="c-no" data-label="ক্রম">৫</td>
+        <td class="c-desc" data-label="বিবরণ">০১-০৭-২০২৬ তারিখে বার্ষিক বেতন বৃদ্ধি (ইনক্রিমেন্ট) সহ নির্ধারিত বেতন</td>
+        <td class="c-val" data-label="মান">
+          <input type="text" inputmode="numeric" min="0" class="in in-num" id="c6" value="০" aria-label="ইনক্রিমেন্ট সহ নির্ধারিত বেতন">
+          <div class="mini-note" id="c6Note" hidden></div>
+          <div class="helper" id="c6Helper" hidden>
+            <span id="c6Hint"></span>
+            <button type="button" class="btn-mini" id="btnApplyC6">এই মান বসাও</button>
+          </div>
+        </td>
+        <td class="c-exp" data-label="ব্যাখ্যা"><span id="exp5"></span></td>
+      </tr>
+      <tr>
+        <td class="c-no" data-label="ক্রম">৬</td>
+        <td class="c-desc" data-label="বিবরণ">বেতন বৃদ্ধির পরিমাণ</td>
+        <td class="c-val" data-label="মান"><output class="auto-out" id="v7">০</output></td>
+        <td class="c-exp" data-label="ব্যাখ্যা"><span id="exp6"></span></td>
+      </tr>
+      <tr>
+        <td class="c-no" data-label="ক্রম">৭</td>
+        <td class="c-desc" data-label="বিবরণ">বৃদ্ধিপ্রাপ্ত বেতনের <span id="lblP1">৪০%</span></td>
+        <td class="c-val" data-label="মান"><output class="auto-out" id="v8">০</output></td>
+        <td class="c-exp" data-label="ব্যাখ্যা"><span id="exp7"></span></td>
+      </tr>
+      <tr>
+        <td class="c-no" data-label="ক্রম">৮</td>
+        <td class="c-desc" data-label="বিবরণ">০১-০৭-২০২৬ তারিখে প্রাপ্য বেতন (<span id="lblCum1">৪০%</span> বৃদ্ধি অনুযায়ী)</td>
+        <td class="c-val" data-label="মান"><output class="auto-out" id="v9">০</output></td>
+        <td class="c-exp" data-label="ব্যাখ্যা"><span id="exp8"></span></td>
+      </tr>
+      <tr>
+        <td class="c-no" data-label="ক্রম">৯</td>
+        <td class="c-desc" data-label="বিবরণ">০১-০৭-২০২৬ তারিখে বার্ষিক বেতন বৃদ্ধি (ইনক্রিমেন্ট) সহ প্রাপ্য বেতন</td>
+        <td class="c-val" data-label="মান"><output class="res-out" id="v10">০</output></td>
+        <td class="c-exp" data-label="ব্যাখ্যা"><span id="exp9"></span></td>
+      </tr>
+      <tr>
+        <td class="c-no" data-label="ক্রম">১০</td>
+        <td class="c-desc" data-label="বিবরণ">০১-০১-২০২৭ তারিখে বেতন বৃদ্ধির <span id="lblP2">৩০%</span></td>
+        <td class="c-val" data-label="মান"><output class="auto-out" id="v11">০</output></td>
+        <td class="c-exp" data-label="ব্যাখ্যা"><span id="exp10"></span></td>
+      </tr>
+      <tr>
+        <td class="c-no" data-label="ক্রম">১১</td>
+        <td class="c-desc" data-label="বিবরণ">০১-০১-২০২৭ তারিখে নির্ধারিত প্রাপ্য বেতন</td>
+        <td class="c-val" data-label="মান"><output class="res-out" id="v12">০</output></td>
+        <td class="c-exp" data-label="ব্যাখ্যা"><span id="exp11"></span></td>
+      </tr>
+      <tr>
+        <td class="c-no" data-label="ক্রম">১২</td>
+        <td class="c-desc" data-label="বিবরণ">০১-০৭-২০২৭ তারিখে বেতন বৃদ্ধির অবশিষ্ট <span id="lblP3">৩০%</span></td>
+        <td class="c-val" data-label="মান"><output class="auto-out" id="v13">০</output></td>
+        <td class="c-exp" data-label="ব্যাখ্যা"><span id="exp12"></span></td>
+      </tr>
+      <tr>
+        <td class="c-no" data-label="ক্রম">১৩</td>
+        <td class="c-desc" data-label="বিবরণ">০১-০৭-২০২৭ তারিখে নির্ধারিত প্রাপ্য বেতন ১০০%</td>
+        <td class="c-val" data-label="মান"><output class="auto-out" id="v14">০</output></td>
+        <td class="c-exp" data-label="ব্যাখ্যা"><span id="exp13"></span></td>
+      </tr>
+      <tr>
+        <td class="c-no" data-label="ক্রম">১৪</td>
+        <td class="c-desc" data-label="বিবরণ">০১-০৭-২০২৭ তারিখে বার্ষিক বেতন বৃদ্ধি (ইনক্রিমেন্ট) সহ প্রাপ্য</td>
+        <td class="c-val" data-label="মান"><output class="res-out" id="v15">০</output></td>
+        <td class="c-exp" data-label="ব্যাখ্যা"><span id="exp14"></span></td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="warn" id="warn12" role="alert"></div>
+</section>
+
+<section class="card no-print" id="scaleCard">
+  <h2>খ-১. বেতনস্কেল রেফারেন্স ও সম্পাদনা <span class="hint">(২০১৫ → ২০২৬)</span></h2>
+  <div class="scale-msg" id="scaleMsg"></div>
+  <div id="scaleRefWrap"></div>
+  <details id="scaleEditPanel">
+    <summary style="cursor:pointer;font-weight:700;color:var(--primary);margin-top:10px">স্কেল ডেটা সম্পাদনা (২০২৬ ধাপ সংশোধন)</summary>
+    <div class="scale-grid" style="margin-top:10px">
+      <label class="field">গ্রেড
+        <select class="in" id="editGradeSel"></select>
+      </label>
+      <label class="field">২০২৬ ধাপসমূহ (কমা দিয়ে আলাদা)
+        <input type="text" class="in" id="editSteps" placeholder="যেমন: ৪৪০০০, ৪৬২০০, ৪৮৬০০ ...">
+      </label>
+      <div class="field">
+        <span>&nbsp;</span>
+        <button type="button" class="btn" id="btnSaveSteps" style="background:var(--green);color:#fff">সংরক্ষণ</button>
+        <button type="button" class="btn" id="btnRestoreSteps" style="background:var(--primary);color:#fff;margin-top:6px">ডিফল্টে ফিরান</button>
+      </div>
+    </div>
+    <p class="muted" id="editMsg"></p>
+  </details>
+</section>
+
+<aside class="card summary no-print">
+  <h3>চূড়ান্ত বেতন সারাংশ</h3>
+  <div class="sum-item">
+    <span class="sum-date">০১-০৭-২০২৬</span>
+    <span class="sum-val" id="sum1">০ ৳</span>
+  </div>
+  <div class="sum-item">
+    <span class="sum-date">০১-০১-২০২৭</span>
+    <span class="sum-val" id="sum2">০ ৳</span>
+  </div>
+  <div class="sum-item">
+    <span class="sum-date">০১-০৭-২০২৭</span>
+    <span class="sum-val" id="sum3">০ ৳</span>
+  </div>
+</aside>
+
+</div>
+
+<section class="card no-print">
+  <h2>গ. ভাতা ও কর্তন</h2>
+  <div class="allow-grid">
+
+    <div class="allow-box">
+      <h3>মেডিকেল ভাতা</h3>
+      <label class="field">টাকা
+        <input type="text" inputmode="numeric" min="0" class="in in-num" id="medical" value="০">
+      </label>
+      <p class="muted">প্রতিটি মূল বেতনের সাথে যোগ হবে। ডিফল্ট ০।</p>
+    </div>
+
+    <div class="allow-box">
+      <h3>অন্যান্য ভাতা</h3>
+      <label class="field">ভাতার নাম (ঐচ্ছিক)
+        <input type="text" class="in" id="otherName" placeholder="অন্যান্য ভাতা">
+      </label>
+      <label class="field">টাকা
+        <input type="text" inputmode="numeric" min="0" class="in in-num" id="other" value="০">
+      </label>
+      <p class="muted">নাম না লিখলে বিবরণীতে “অন্যান্য ভাতা” দেখাবে।</p>
+    </div>
+
+    <div class="allow-box">
+      <h3>বাড়ি ভাড়া ভাতা</h3>
+      <label class="field">বেসিক (টাকা)
+        <input type="text" inputmode="numeric" min="0" class="in in-num" id="houseBasic" value="০">
+      </label>
+      <label class="field">শতকরা হার (%)
+        <input type="text" inputmode="decimal" min="0" max="100" class="in in-num" id="housePct" value="০">
+      </label>
+      <div class="result-line">
+        <span>বাড়ি ভাড়া =</span>
+        <output class="res-out" id="houseAmt">০ ৳</output>
+      </div>
+      <p class="muted" id="houseFormula">০ × ০% = ০</p>
+    </div>
+
+    <div class="allow-box">
+      <h3>কর্তন</h3>
+      <div class="radios">
+        <label><input type="radio" name="dedMode" value="amount" checked> টাকার অঙ্কে</label>
+        <label><input type="radio" name="dedMode" value="percent"> শতকরা হারে</label>
+      </div>
+      <label class="field" id="dedAmountWrap">টাকার অঙ্ক
+        <input type="text" inputmode="numeric" min="0" class="in in-num" id="dedAmount" value="০">
+      </label>
+      <label class="field hidden" id="dedPctWrap">শতকরা হার (%)
+        <input type="text" inputmode="decimal" min="0" max="100" class="in in-num" id="dedPct" value="০">
+      </label>
+      <label class="field">কর্তনের নাম (ঐচ্ছিক)
+        <input type="text" class="in" id="dedName" placeholder="কর্তন">
+      </label>
+      <p class="muted" id="dedHint"></p>
+    </div>
+
+  </div>
+</section>
+
+<section class="card" id="printArea">
+
+  <div class="print-only print-head">
+    <h2>জাতীয় বেতনস্কেল-২০২৬ অনুযায়ী বেতন বিবরণী<span class="sub">চূড়ান্ত বেতন ও কর্তনের বিবরণ</span></h2>
+    <div class="print-emp">
+      <span>নাম: <b id="pName">—</b></span>
+      <span>পদবি: <b id="pPos">—</b></span>
+      <span>আইডি/কর্মচারী নম্বর: <b id="pId">—</b></span>
+      <span>দপ্তর: <b id="pDept">—</b></span>
+    </div>
+  </div>
+
+  <h2 class="no-print">ঘ. চূড়ান্ত বেতন ও বেতন বিবরণী</h2>
+
+  <table class="stmt">
+    <thead>
+      <tr>
+        <th>বিবরণ</th>
+        <th>০১-০৭-২০২৬</th>
+        <th>০১-০১-২০২৭</th>
+        <th>০১-০৭-২০২৭</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="lbl" data-label="বিবরণ">মূল বেতন</td>
+        <td data-label="০১-০৭-২০২৬"><span id="stB1">০ ৳</span></td>
+        <td data-label="০১-০১-২০২৭"><span id="stB2">০ ৳</span></td>
+        <td data-label="০১-০৭-২০২৭"><span id="stB3">০ ৳</span></td>
+      </tr>
+      <tr>
+        <td class="lbl" data-label="বিবরণ">(+) মেডিকেল ভাতা</td>
+        <td data-label="০১-০৭-২০২৬"><span id="stM1">০ ৳</span></td>
+        <td data-label="০১-০১-২০২৭"><span id="stM2">০ ৳</span></td>
+        <td data-label="০১-০৭-২০২৭"><span id="stM3">০ ৳</span></td>
+      </tr>
+      <tr>
+        <td class="lbl" data-label="বিবরণ" id="lblOther">(+) অন্যান্য ভাতা</td>
+        <td data-label="০১-০৭-২০২৬"><span id="stO1">০ ৳</span></td>
+        <td data-label="০১-০১-২০২৭"><span id="stO2">০ ৳</span></td>
+        <td data-label="০১-০৭-২০২৭"><span id="stO3">০ ৳</span></td>
+      </tr>
+      <tr>
+        <td class="lbl" data-label="বিবরণ">(+) বাড়ি ভাড়া ভাতা (বেসিক × %)</td>
+        <td data-label="০১-০৭-২০২৬"><span id="stH1">০ ৳</span></td>
+        <td data-label="০১-০১-২০২৭"><span id="stH2">০ ৳</span></td>
+        <td data-label="০১-০৭-২০২৭"><span id="stH3">০ ৳</span></td>
+      </tr>
+      <tr class="gross">
+        <td class="lbl" data-label="বিবরণ">মোট প্রাপ্য</td>
+        <td data-label="০১-০৭-২০২৬"><span id="stG1">০ ৳</span></td>
+        <td data-label="০১-০১-২০২৭"><span id="stG2">০ ৳</span></td>
+        <td data-label="০১-০৭-২০২৭"><span id="stG3">০ ৳</span></td>
+      </tr>
+      <tr>
+        <td class="lbl" data-label="বিবরণ" id="lblDed">(−) কর্তন</td>
+        <td data-label="০১-০৭-২০২৬"><span id="stD1">০ ৳</span></td>
+        <td data-label="০১-০১-২০২৭"><span id="stD2">০ ৳</span></td>
+        <td data-label="০১-০৭-২০২৭"><span id="stD3">০ ৳</span></td>
+      </tr>
+      <tr class="net">
+        <td class="lbl" data-label="বিবরণ">চূড়ান্ত বেতন (নিট)</td>
+        <td data-label="০১-০৭-২০২৬"><span id="stN1">০ ৳</span></td>
+        <td data-label="০১-০১-২০২৭"><span id="stN2">০ ৳</span></td>
+        <td data-label="০১-০৭-২০২৭"><span id="stN3">০ ৳</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="words">
+    <div><b>০১-০৭-২০২৬ চূড়ান্ত বেতন:</b> <span id="w1">শূন্য টাকা মাত্র</span></div>
+    <div><b>০১-০১-২০২৭ চূড়ান্ত বেতন:</b> <span id="w2">শূন্য টাকা মাত্র</span></div>
+    <div><b>০১-০৭-২০২৭ চূড়ান্ত বেতন:</b> <span id="w3">শূন্য টাকা মাত্র</span></div>
+  </div>
+
+  <div class="note-box" id="noteBox">
+    <b>নোট:</b> <span id="noteOut"></span>
+  </div>
+
+  <div class="warn no-print" id="warn3" role="alert"></div>
+
+  <div class="print-only sign-row">
+    <div class="sign-box">প্রস্তুতকারক</div>
+    <div class="sign-box">যাচাইকারী</div>
+    <div class="sign-box">অনুমোদনকারী</div>
+  </div>
+  <div class="print-only print-date" id="printDate"></div>
+
+  <div class="print-only print-credit">
+    Developed by <b>MD AHSAN ULLAH</b>, Lecturer–Arabic and MPhil Researcher, Jagannath University; Manager, Genuine Technology &amp; Research Ltd.
+    <div class="pc-links">📞 01323-202325 · 🌐 web.facebook.com/ahsandisiiuc</div>
+  </div>
+
+</section>
+
+<footer class="app-footer no-print">
+  <div class="dev-name">Developed by MD AHSAN ULLAH</div>
+  <div>Lecturer–Arabic and MPhil Researcher, Jagannath University</div>
+  <div>Manager, Genuine Technology &amp; Research Ltd.</div>
+  <div class="dev-links">
+    <a href="tel:+8801323202325">📞 01323-202325</a>
+    <a href="https://web.facebook.com/ahsandisiiuc" target="_blank" rel="noopener noreferrer">🌐 web.facebook.com/ahsandisiiuc</a>
+  </div>
+</footer>
+
+</main>
+
+<script>
+(function(){
+"use strict";
+
+/* ============================================================================
+ * স্কেল ডেটা — pay_scales_v2.json এমবেড (offline single file)।
+ * নিচের PAY_SCALES_V2 ডেটাই একমাত্র সূত্র; লজিকে কোনো সংখ্যা হার্ড-কোড নেই।
+ * "স্কেল ডেটা সম্পাদনা" প্যানেল / localStorage (salary2026_scales) থেকে
+ * ২০২৬ ধাপ সংশোধন করা যাবে; নিচের কমেন্ট দেখুন।
+ * -------------------------------------------------------------------------- */
+var PAY_SCALES_V2 = {
+ "_note": "scale2015 verified. scale2026: grade 9 high confidence (full chart matches sources); others medium = derived (g2-7: 2015 steps x2 rounded to nearest 100, matches reported start+top; g8-9: ceil(start*1.05^k,100); g10-20: same rule with last step set to reported top). VERIFY against gazette S.R.O. 347-Ain/2026.",
+ "phase": { "grades1to9": [40, 70, 100], "grades10to20": [50, 75, 100] },
+ "scale2015": {
+  "1":[78000],
+  "2":[66000,68480,71050,73720,76490],
+  "3":[56500,58760,61120,63570,66120,68770,71530,74400],
+  "4":[50000,52000,54080,56250,58500,60840,63280,65820,68460,71200],
+  "5":[43000,44940,46970,49090,51300,53610,56030,58560,61200,63960,66840,69850],
+  "6":[35500,37280,39150,41110,43170,45330,47600,49980,52480,55110,57870,60770,63810,67010],
+  "7":[29000,30450,31980,33580,35260,37030,38890,40840,42890,45040,47300,49670,52160,54770,57510,60390,63410],
+  "8":[23000,24150,25360,26630,27970,29370,30840,32390,34010,35720,37510,39390,41360,43430,45610,47900,50300,52820,55470],
+  "9":[22000,23100,24260,25480,26760,28100,29510,30990,32540,34170,35880,37680,39570,41550,43630,45820,48120,50530,53060],
+  "10":[16000,16800,17640,18530,19460,20440,21470,22550,23680,24870,26120,27430,28810,30260,31780,33370,35040,36800,38640],
+  "11":[12500,13130,13790,14480,15210,15980,16780,17620,18510,19440,20420,21450,22530,23660,24850,26100,27410,28790,30230],
+  "12":[11300,11870,12470,13100,13760,14450,15180,15940,16740,17580,18460,19390,20360,21380,22450,23580,24760,26000,27300],
+  "13":[11000,11550,12130,12740,13380,14050,14760,15500,16280,17100,17960,18860,19810,20810,21860,22960,24110,25320,26590],
+  "14":[10200,10710,11250,11820,12420,13050,13710,14400,15120,15880,16680,17520,18400,19320,20290,21310,22380,23500,24680],
+  "15":[9700,10190,10700,11240,11810,12410,13040,13700,14390,15110,15870,16670,17510,18390,19310,20280,21300,22370,23490],
+  "16":[9300,9770,10260,10780,11320,11890,12490,13120,13780,14470,15200,15960,16760,17600,18480,19410,20390,21410,22490],
+  "17":[9000,9450,9930,10430,10960,11510,12090,12700,13340,14010,14720,15460,16240,17060,17920,18820,19770,20760,21800],
+  "18":[8800,9240,9710,10200,10710,11250,11820,12420,13050,13710,14400,15120,15880,16680,17520,18400,19320,20290,21310],
+  "19":[8500,8930,9380,9850,10350,10870,11420,12000,12600,13230,13900,14600,15330,16100,16910,17760,18650,19590,20570],
+  "20":[8250,8670,9110,9570,10050,10560,11090,11650,12240,12860,13510,14190,14900,15650,16440,17270,18140,19050,20010]
+ },
+ "scale2026": {
+  "1":{ "steps":[156000], "confidence":"high" },
+  "2":{ "steps":[132000,137000,142100,147400,153000], "confidence":"medium" },
+  "3":{ "steps":[113000,117500,122200,127100,132200,137500,143100,148800], "confidence":"medium" },
+  "4":{ "steps":[100000,104000,108200,112500,117000,121700,126600,131600,136900,142400], "confidence":"medium" },
+  "5":{ "steps":[86000,89900,93900,98200,102600,107200,112100,117100,122400,127900,133700,139700], "confidence":"medium" },
+  "6":{ "steps":[71000,74600,78300,82200,86300,90700,95200,100000,105000,110200,115700,121500,127600,134000], "confidence":"medium" },
+  "7":{ "steps":[58000,60900,64000,67200,70500,74100,77800,81700,85800,90100,94600,99300,104300,109500,115000,120800,126800], "confidence":"medium" },
+  "8":{ "steps":[46000,48300,50800,53300,56000,58800,61700,64800,68000,71400,75000,78700,82700,86800,91100,95700,100500,105500,110800], "confidence":"medium" },
+  "9":{ "steps":[44000,46200,48600,51000,53500,56200,59000,62000,65100,68300,71700,75300,79100,83000,87200,91500,96100,100900,105900], "confidence":"high" },
+  "10":{ "steps":[32000,33600,35300,37100,38900,40900,42900,45100,47300,49700,52200,54800,57500,60400,63400,66600,69900,73400,77300], "confidence":"medium" },
+  "11":{ "steps":[25000,26300,27600,29000,30400,32000,33600,35200,37000,38800,40800,42800,44900,47200,49500,52000,54600,57400,60500], "confidence":"medium" },
+  "12":{ "steps":[24300,25600,26800,28200,29600,31100,32600,34200,36000,37700,39600,41600,43700,45900,48200,50600,53100,55700,58700], "confidence":"medium" },
+  "13":{ "steps":[24000,25200,26500,27800,29200,30700,32200,33800,35500,37300,39100,41100,43200,45300,47600,49900,52400,55100,58000], "confidence":"medium" },
+  "14":{ "steps":[23500,24700,26000,27300,28600,30000,31500,33100,34800,36500,38300,40200,42300,44400,46600,48900,51300,53900,56800], "confidence":"medium" },
+  "15":{ "steps":[22800,24000,25200,26400,27800,29100,30600,32100,33700,35400,37200,39000,41000,43000,45200,47400,49800,52300,55200], "confidence":"medium" },
+  "16":{ "steps":[21900,23000,24200,25400,26700,28000,29400,30900,32400,34000,35700,37500,39400,41300,43400,45600,47900,50200,52900], "confidence":"medium" },
+  "17":{ "steps":[21400,22500,23600,24800,26100,27400,28700,30200,31700,33200,34900,36700,38500,40400,42400,44500,46800,49100,51900], "confidence":"medium" },
+  "18":{ "steps":[21000,22100,23200,24400,25600,26900,28200,29600,31100,32600,34300,36000,37800,39600,41600,43700,45900,48200,50900], "confidence":"medium" },
+  "19":{ "steps":[20500,21600,22700,23800,25000,26200,27500,28900,30300,31900,33400,35100,36900,38700,40600,42700,44800,47000,49600], "confidence":"medium" },
+  "20":{ "steps":[20000,21000,22100,23200,24400,25600,26900,28200,29600,31100,32600,34300,36000,37800,39600,41600,43700,45900,48400], "confidence":"medium" }
+ }
+};
+
+/* phase-in শতাংশ: গ্রেড ১–৯ = ৪০/৩০/৩০, গ্রেড ১০–২০ = ৫০/২৫/২৫ */
+var PHASE = { low:[40,30,30], high:[50,25,25] };
+
+/* স্বরলিপি: স্কেল ডেটা রানটাইমে PAY_SCALES_V2 থেকে পড়া হয় (localStorage override সহ) */
+var scale2015 = PAY_SCALES_V2.scale2015;
+var scale2026 = PAY_SCALES_V2.scale2026;
+
+function loadScaleOverrides(){
+  try{
+    var raw=localStorage.getItem("salary2026_scales");
+    if(!raw)return;
+    var o=JSON.parse(raw)||{};
+    if(o.scale2026){
+      Object.keys(o.scale2026).forEach(function(g){
+        if(scale2026[g]&&o.scale2026[g]&&o.scale2026[g].steps){
+          scale2026[g].steps=o.scale2026[g].steps.slice();
+        }
+      });
+    }
+    if(o.scale2015){
+      Object.keys(o.scale2015).forEach(function(g){
+        if(o.scale2015[g]&&o.scale2015[g].length)scale2015[g]=o.scale2015[g].slice();
+      });
+    }
+  }catch(e){}
+}
+function saveScaleOverrides(){
+  try{
+    localStorage.setItem("salary2026_scales",JSON.stringify({
+      scale2015:scale2015,
+      scale2026:(function(){var r={};Object.keys(scale2026).forEach(function(g){r[g]={steps:scale2026[g].steps,confidence:scale2026[g].confidence};});return r;})()
+    }));
+  }catch(e){}
+}
+
+function gradeGroup(g){ return g>=1&&g<=9 ? "low" : "high"; }
+/* p1/p2/p3: C7-এর অংশ, গ্রেডভিত্তিক */
+function phasePcts(g){
+  var key=gradeGroup(g);
+  var arr=(key==="low")?PHASE.low:PHASE.high;
+  return { p1:arr[0], p2:arr[1], p3:arr[2] };
+}
+function steps2026(g){ var d=scale2026[g]; return d?d.steps:[]; }
+function first2026(g){ var s=steps2026(g); return s.length?s[0]:0; }
+function first2015(g){ var s=scale2015[g]; return (s&&s.length)?s[0]:0; }
+
+/* পরবর্তী বার্ষিক ইনক্রিমেন্ট ধাপ — double step এড়াতে index/indexOf নিয়ম */
+function nextStep(v,L){
+  if(!L||!L.length)return v;
+  var i=L.indexOf(v);
+  if(i!==-1)return L[Math.min(i+1,L.length-1)];
+  var x=v*1.05;
+  var best=L[0];
+  for(var k=0;k<L.length;k++){
+    var s=L[k];
+    var db=Math.abs(s-x), bb=Math.abs(best-x);
+    if(db<bb||(db===bb&&s>best))best=s;
+  }
+  return best;
+}
+/* Section 3.1: C4 = target-এর সমান বা বড় প্রথম ২০২৬ ধাপ */
+function calcC4(g,c2){
+  var L=steps2026(g);
+  if(!L.length)return 0;
+  if(g===1)return L[0];
+  var diff=c2-first2015(g);
+  var target=first2026(g)+diff;
+  for(var k=0;k<L.length;k++){ if(L[k]>=target)return L[k]; }
+  return L[L.length-1];
+}
+
+var $=function(id){return document.getElementById(id);};
+var BN="০১২৩৪৫৬৭৮৯";
+var W=["","এক","দুই","তিন","চার","পাঁচ","ছয়","সাত","আট","নয়",
+"দশ","এগারো","বারো","তেরো","চৌদ্দ","পনেরো","ষোলো","সতেরো","আঠারো","ঊনিশ",
+"বিশ","একুশ","বাইশ","তেইশ","চব্বিশ","পঁচিশ","ছাব্বিশ","সাতাশ","আটাশ","ঊনত্রিশ",
+"ত্রিশ","একত্রিশ","বত্রিশ","তেত্রিশ","চৌত্রিশ","পঁয়ত্রিশ","ছত্রিশ","সাঁইত্রিশ","আটত্রিশ","ঊনচল্লিশ",
+"চল্লিশ","একচল্লিশ","বিয়াল্লিশ","তেতাল্লিশ","চুয়াল্লিশ","পঁয়তাল্লিশ","ছেচল্লিশ","সাতচল্লিশ","আটচল্লিশ","ঊনপঞ্চাশ",
+"পঞ্চাশ","একান্ন","বায়ান্ন","তিপ্পান্ন","চুয়ান্ন","পঞ্চান্ন","ছাপ্পান্ন","সাতান্ন","আটান্ন","ঊনষাট",
+"ষাট","একষট্টি","বাষট্টি","তেষট্টি","চৌষট্টি","পঁয়ষট্টি","ছেষট্টি","সাতষট্টি","আটষট্টি","ঊনসত্তর",
+"সত্তর","একাত্তর","বাহাত্তর","তিয়াত্তর","চুয়াত্তর","পঁচাত্তর","ছিয়াত্তর","সাতাত্তর","আটাত্তর","ঊনআশি",
+"আশি","একাশি","বিরাশি","তিরাশি","চুরাশি","পঁচাশি","ছিয়াশি","সাতাশি","আটাশি","ঊননব্বই",
+"নব্বই","একানব্বই","বিরানব্বই","তিরানব্বই","চুরানব্বই","পঁচানব্বই","ছিয়ানব্বই","সাতানব্বই","আটানব্বই","নিরানব্বই"];
+
+function toEn(s){return String(s==null?"":s).replace(/[০-৯]/g,function(d){return String(d.charCodeAt(0)-0x09E6);});}
+function toBnDigits(s){return String(s==null?"":s).replace(/[0-9]/g,function(d){return BN[+d];});}
+function bnRaw(n){return toBnDigits(String(n));}
+function num(v){
+  var s=toEn(v).replace(/[^0-9.]/g,"");
+  if(!s)return 0;
+  var n=parseFloat(s);
+  if(!isFinite(n))return 0;
+  return n<0?0:n;
+}
+function bn(n){
+  var v=Number(n)||0;
+  var neg=v<0;
+  var r=Math.round(Math.abs(v));
+  var s=String(r).replace(/\B(?=(\d{3})+(?!\d))/g,",");
+  if(neg&&r>0)s="-"+s;
+  return toBnDigits(s);
+}
+function words(n){
+  var v=Math.round(Math.abs(Number(n)||0));
+  if(v===0)return "শূন্য";
+  var parts=[];
+  var crore=Math.floor(v/10000000);v%=10000000;
+  var lakh=Math.floor(v/100000);v%=100000;
+  var thousand=Math.floor(v/1000);v%=1000;
+  var hundred=Math.floor(v/100);v%=100;
+  if(crore)parts.push(words(crore)+" কোটি");
+  if(lakh)parts.push(W[lakh]+" লাখ");
+  if(thousand)parts.push(W[thousand]+" হাজার");
+  if(hundred)parts.push(W[hundred]+"শত");
+  if(v)parts.push(W[v]);
+  return parts.join(" ");
+}
+function set(id,txt){
+  var el=$(id);
+  if(!el)return;
+  if(el.textContent!==txt){
+    el.textContent=txt;
+    el.classList.remove("flash");
+    void el.offsetWidth;
+    el.classList.add("flash");
+  }
+}
+
+var NUM_FIELDS=["c2","c4","c6","medical","other","houseBasic","housePct","dedAmount","dedPct"];
+var TEXT_FIELDS=["empName","empPos","empId","empDept","otherName","dedName"];
+var ALL_FIELDS=NUM_FIELDS.concat(TEXT_FIELDS);
+
+function save(){
+  try{
+    var d={};
+    ALL_FIELDS.forEach(function(f){var el=$(f);if(el)d[f]=el.value;});
+    var r=document.querySelector("input[name=dedMode]:checked");
+    d.dedMode=r?r.value:"amount";
+    if($("gradeSel"))d.gradeSel=$("gradeSel").value;
+    if($("stepSel"))d.stepSel=$("stepSel").value;
+    localStorage.setItem("salary2026",JSON.stringify(d));
+  }catch(e){}
+}
+function load(){
+  try{
+    var raw=localStorage.getItem("salary2026");
+    if(!raw)return;
+    var d=JSON.parse(raw)||{};
+    ALL_FIELDS.forEach(function(f){
+      if(d[f]!==undefined&&d[f]!==null&&$(f))$(f).value=d[f];
+    });
+    if(d.dedMode){
+      var r=document.querySelector('input[name=dedMode][value="'+d.dedMode+'"]');
+      if(r)r.checked=true;
+    }
+    if($("gradeSel")&&d.gradeSel!==undefined){
+      $("gradeSel").value=d.gradeSel;
+      fill2015Steps();
+      if($("stepSel")&&d.stepSel!==undefined)$("stepSel").value=d.stepSel;
+      showGradeConfNote(parseInt(d.gradeSel,10));
+    }
+  }catch(e){}
+}
+
+function toggleDed(){
+  var r=document.querySelector("input[name=dedMode]:checked");
+  var mode=r?r.value:"amount";
+  $("dedAmountWrap").classList.toggle("hidden",mode!=="amount");
+  $("dedPctWrap").classList.toggle("hidden",mode!=="percent");
+}
+
+function bindNum(id){
+  var el=$(id);
+  if(!el)return;
+  el.addEventListener("input",function(){
+    var en=toEn(el.value);
+    var cl=en.replace(/[^0-9.]/g,"");
+    var i=cl.indexOf(".");
+    if(i>-1)cl=cl.slice(0,i+1)+cl.slice(i+1).replace(/\./g,"");
+    if(cl!==el.value){
+      var p=null;
+      try{p=el.selectionStart;}catch(e){}
+      el.value=cl;
+      if(p!==null){
+        try{el.setSelectionRange(Math.min(p,cl.length),Math.min(p,cl.length));}catch(e){}
+      }
+    }
+    save();calc();
+  });
+  el.addEventListener("blur",function(){
+    if(el.value&&/[0-9]/.test(el.value)){
+      el.value=toBnDigits(el.value.replace(/[^0-9.]/g,""));
+    }
+    save();calc();
+  });
+}
+function bindText(id){
+  var el=$(id);
+  if(!el)return;
+  el.addEventListener("input",function(){save();calc();});
+}
+function bindPct(id){
+  bindNum(id);
+  var el=$(id);
+  if(!el)return;
+  el.addEventListener("change",function(){
+    var n=num(el.value);
+    if(n>100)n=100;
+    el.value=toBnDigits(String(n));
+    save();calc();
+  });
+}
+
+function current2026Grade(){
+  var g=$("gradeSel")?$("gradeSel").value:"";
+  if(!g)return 0;
+  return parseInt(g,10)||0;
+}
+/* ---- Section 3: C4 ও C6 স্বয়ংক্রিয় নির্ধারণ ------------------------------ */
+/* স্বয়ংক্রিয় মান বসান (grade / ২০১৫ ধাপ / C2 পরিবর্তনে)।
+ * m4/m6 = সত্য হলে ব্যবহারকারী ম্যানুয়াল মান দিয়েছেন — তবেই আবার ওভাররাইট করি। */
+function autoFillFromScale(){
+  var g=current2026Grade();
+  var L=steps2026(g);
+  if(!g||!L.length)return;
+  var c2=num($("c2").value);
+  var c4=calcC4(g,c2);
+  $("c4").value=toBnDigits(String(c4));
+  var c6=nextStep(c4,L);
+  $("c6").value=toBnDigits(String(c6));
+  // গ্রেড ১ ফিক্সড
+}
+function buildScaleUI(){
+  var gs=$("gradeSel");
+  if(!gs)return;
+  var opts='<option value="">— নির্বাচন করুন —</option>';
+  for(var g=1;g<=20;g++){
+    var s15=scale2015[g]||[];
+    var lo=s15.length?s15[0]:0, hi=s15.length?s15[s15.length-1]:0;
+    opts+='<option value="'+g+'">গ্রেড '+toBnDigits(String(g))+' ('+bn(lo)+' - '+bn(hi)+')</option>';
+  }
+  gs.innerHTML=opts;
+  gs.addEventListener("change",function(){fill2015Steps();autoFillFromScale();save();calc();});
+  $("stepSel").addEventListener("change",function(){apply2015Step();save();calc();});
+  fill2015Steps();
+  buildEditPanel();
+}
+/* Section 2: গ্রেড নির্বাচনের পর সব ২০১৫ ধাপ (C2-তে বসে) */
+function fill2015Steps(){
+  var g=current2026Grade();
+  var ss=$("stepSel");
+  if(!g){ss.innerHTML='<option value="">—</option>';ss.disabled=true;return;}
+  var s15=scale2015[g]||[];
+  ss.disabled=false;
+  var html='<option value="">— ধাপ নির্বাচন —</option>';
+  var cur=num($("c2").value);
+  var matched=false;
+  for(var i=0;i<s15.length;i++){
+    if(s15[i]===cur)matched=true;
+    html+='<option value="'+i+'">'+bn(s15[i])+'</option>';
+  }
+  html+='<option value="other">অন্য</option>';
+  ss.innerHTML=html;
+  ss.value=matched?String(s15.indexOf(cur)):($("c2").value&&cur?"other":"");
+}
+function apply2015Step(){
+  var g=current2026Grade();
+  if(!g)return;
+  var v=$("stepSel").value;
+  if(v===""||v==="other")return;
+  var i=parseInt(v,10);
+  var s15=scale2015[g]||[];
+  if(isNaN(i)||s15[i]==null)return;
+  $("c2").value=toBnDigits(String(s15[i]));
+  autoFillFromScale();
+  showGradeConfNote(g);
+}
+function showGradeConfNote(g){
+  var el=$("gradeConfNote");
+  if(!el)return;
+  var conf=(scale2026[g]&&scale2026[g].confidence)||"high";
+  if(conf!=="high"){
+    el.hidden=false;
+    el.textContent="২০২৬ স্কেলের ধাপ গেজেটের সাথে মিলিয়ে নিন (এই গ্রেডের স্কেল আনুমানিক ধরা হয়েছে)।";
+  }else{
+    el.hidden=true;el.textContent="";
+  }
+}
+
+/* ---- Section 5: স্কেল ডেটা সম্পাদনা প্যানেল ------------------------------- */
+function buildEditPanel(){
+  var es=$("editGradeSel");
+  if(!es)return;
+  var opts='';
+  for(var g=1;g<=20;g++){
+    opts+='<option value="'+g+'">গ্রেড '+toBnDigits(String(g))+'</option>';
+  }
+  es.innerHTML=opts;
+  es.addEventListener("change",loadEditSteps);
+  $("btnSaveSteps").addEventListener("click",function(){
+    var g=parseInt(es.value,10);
+    var arr=parseStepsInput($("editSteps").value);
+    if(!g||!arr.length){$("editMsg").textContent="সঠিক ধাপ লিখুন (কমা দিয়ে)।";return;}
+    scale2026[g].steps=arr;
+    saveScaleOverrides();
+    $("editMsg").textContent="গ্রেড "+toBnDigits(String(g))+"-এর ২০২৬ ধাপ সংরক্ষিত হয়েছে ("+bn(arr.length)+" ধাপ)।";
+    fill2015Steps();autoFillFromScale();calc();
+  });
+  $("btnRestoreSteps").addEventListener("click",function(){
+    var g=parseInt(es.value,10);
+    if(!g)return;
+    if(!confirm("গ্রেড "+toBnDigits(String(g))+"-এর ২০২৬ ধাপ ডিফল্টে ফিরিয়ে নেবেন?"))return;
+    try{
+      var raw=localStorage.getItem("salary2026_scales");
+      if(raw){
+        var o=JSON.parse(raw)||{};
+        if(o.scale2026)delete o.scale2026[g];
+        localStorage.setItem("salary2026_scales",JSON.stringify(o));
+      }
+    }catch(e){}
+    scale2026[g].steps=PAY_SCALES_V2.scale2026[g].steps.slice();
+    loadEditSteps();
+    $("editMsg").textContent="ডিফল্ট ধাপ ফিরিয়ে আনা হয়েছে।";
+    fill2015Steps();autoFillFromScale();calc();
+  });
+  loadEditSteps();
+}
+function parseStepsInput(s){
+  var en=toEn(s).split(/[,\s]+/);
+  var out=[];
+  for(var i=0;i<en.length;i++){
+    var n=parseFloat(en[i]);
+    if(isFinite(n)&&n>0)out.push(n);
+  }
+  out.sort(function(a,b){return a-b;});
+  return out;
+}
+function loadEditSteps(){
+  var g=parseInt($("editGradeSel").value,10);
+  if(!g)return;
+  var L=steps2026(g);
+  $("editSteps").value=L.map(function(n){return bnRaw(n);}).join(", ");
+  $("editMsg").textContent="";
+}
+
+/* ---- রেফারেন্স টেবিল (২০১৫ বনাম ২০২৬) ------------------------------------ */
+function updateScaleMsg(g){
+  var el=$("scaleMsg");
+  if(!el)return;
+  if(!g){el.textContent="";el.hidden=true;return;}
+  el.hidden=false;
+  var L=steps2026(g);
+  var conf=(scale2026[g]&&scale2026[g].confidence)||"high";
+  var lines=[];
+  lines.push("গ্রেড "+toBnDigits(String(g))+" · ২০২৬ স্টার্ট বেতন "+bn(L[0])+" · সর্বোচ্চ ধাপ "+bn(L[L.length-1])
+    +" · ফেজ-ইন "+bn(phasePcts(g).p1)+"% / "+bn(phasePcts(g).p2)+"% / "+bn(phasePcts(g).p3)+"%");
+  if(conf!=="high")lines.push("⚠ ২০২৬ স্কেলের ধাপ গেজেটের সাথে মিলিয়ে নিন (আনুমানিক)।");
+  el.textContent=lines.join("\n");
+  renderScaleRef(g);
+}
+function renderScaleRef(g){
+  var wrap=$("scaleRefWrap");
+  if(!wrap)return;
+  if(!g){wrap.innerHTML="";return;}
+  var L=steps2026(g);
+  var s15=scale2015[g]||[];
+  var curC4=num($("c4").value), curC6=num($("c6").value);
+  var html='<div class="scale-ref-wrap"><table class="scale-ref"><caption>গ্রেড '+toBnDigits(String(g))+' — জাতীয় বেতনস্কেল তুলনা (২০১৫ বনাম ২০২৬)</caption>';
+  html+='<thead><tr><th>ধাপ</th><th>২০১৫ মূল বেতন</th><th>২০২৬ মূল বেতন</th></tr></thead><tbody>';
+  for(var i=0;i<L.length;i++){
+    var on=(L[i]===curC6||L[i]===curC4||(s15[i]!=null&&s15[i]===curC4))?' class="on"':"";
+    html+='<tr'+on+'><td class="yr">'+toBnDigits(String(i+1))+'</td>';
+    html+='<td class="tot">'+(s15[i]!=null?bn(s15[i]):"—")+'</td>';
+    html+='<td class="cur-col">'+bn(L[i])+(i===L.length-1?" ★":"")+'</td></tr>';
+  }
+  html+='</tbody></table></div>';
+  wrap.innerHTML=html;
+}
+/* ম্যানুয়াল মান নোট */
+function updateManualNote(){
+  var g=current2026Grade();
+  var L=g?steps2026(g):[];
+  var c4=num($("c4").value), c6=num($("c6").value);
+  var n4=$("c4Note"), n6=$("c6Note");
+  if(!n4||!n6)return;
+  if(!g){n4.hidden=true;n6.hidden=true;return;}
+  if(c4&&L.indexOf(c4)===-1){n4.hidden=false;n4.textContent="এই মানটি স্কেলের কোনো ধাপ নয় (ম্যানুয়াল মান)।";}
+  else {n4.hidden=true;n4.textContent="";}
+  if(c6&&L.indexOf(c6)===-1){n6.hidden=false;n6.textContent="এই মানটি স্কেলের কোনো ধাপ নয় (ম্যানুয়াল মান)।";}
+  else {n6.hidden=true;n6.textContent="";}
+}
+
+function calc(){
+  var c2=num($("c2").value);
+  var c4=num($("c4").value);
+  var c6=num($("c6").value);
+  var g=current2026Grade();
+  var L=g?steps2026(g):[];
+  var pp=phasePcts(g||1);
+  var p1=pp.p1, p2=pp.p2, p3=pp.p3, cum2=p1+p2, cum3=p1+p2+p3;
+
+  var c5=c4;
+  var c7=c5-c2;
+  var c8=c7*p1/100;
+  var c9=c2+c8;
+  var inc=c6-c5;
+  var c10=c9+inc;
+  var c11=c7*p2/100;
+  var c12=c10+c11;
+  var c13=c7*p3/100;
+  var c14=c6;
+  /* Section 4: C15 = C6-এর পরবর্তী বার্ষিক ইনক্রিমেন্ট ধাপ (২০২৬ স্কেল) */
+  var c15=(L.length)?nextStep(c6,L):(c14+inc);
+
+  set("v5",bn(c5));
+  set("v7",bn(c7));
+  set("v8",bn(c8));
+  set("v9",bn(c9));
+  set("v10",bn(c10));
+  set("v11",bn(c11));
+  set("v12",bn(c12));
+  set("v13",bn(c13));
+  set("v14",bn(c14));
+  set("v15",bn(c15));
+
+  /* গ্রেডভিত্তিক শতাংশ লেবেল */
+  set("lblP1",bnRaw(p1)+"%");
+  set("lblP2",bnRaw(p2)+"%");
+  set("lblP3",bnRaw(p3)+"%");
+  set("lblCum1",bnRaw(cum2)+"%");
+
+  set("exp6","বৃদ্ধির পরিমাণ = ইনক্রিমেন্ট-ছাড়া নতুন বেতন − ৩০-০৬-২০২৬ মূল বেতন = "+bn(c5)+" − "+bn(c2)+" = "+bn(c7));
+  set("exp7",bn(c7)+"-এর "+bnRaw(p1)+"% = "+bn(c8));
+  set("exp8","মূল বেতন + বৃদ্ধির "+bnRaw(p1)+"% = "+bn(c2)+" + "+bn(c8)+" = "+bn(c9));
+  set("exp9","ইনক্রিমেন্ট = ("+bn(c6)+" − "+bn(c5)+") = "+bn(inc)+"; "+bn(c9)+" + "+bn(inc)+" = "+bn(c10));
+  set("exp10","বৃদ্ধির "+bnRaw(p2)+"% = "+bn(c7)+" × "+bnRaw(p2)+"% = "+bn(c11)+" (ক্রমপুঞ্জ "+bnRaw(cum2)+"%)");
+  set("exp11","আগের ইনক্রিমেন্ট-সহ প্রাপ্য + "+bnRaw(p2)+"% অংশ = "+bn(c10)+" + "+bn(c11)+" = "+bn(c12));
+  set("exp12","অবশিষ্ট "+bnRaw(p3)+"% = "+bn(c7)+" × "+bnRaw(p3)+"% = "+bn(c13)+" (ক্রমপুঞ্জ "+bnRaw(cum3)+"%)");
+  set("exp13","১০০% ধাপে পূর্ণ বেতন = "+bn(c14));
+  set("exp14","বার্ষিক ইনক্রিমেন্ট ধাপ = "+bn(c15)+" (২০২৬ স্কেলের পরবর্তী ধাপ)");
+  /* C4/C6 ব্যাখ্যা (Section 3-এর লাইভ নম্বর) */
+  if(g&&L.length){
+    var diff=c2-first2015(g);
+    var target=first2026(g)+diff;
+    set("exp4",bn(c2)+" − "+bn(first2015(g))+" = "+bn(diff)+"; "+bn(first2026(g))+" + "+bn(diff)+" = "+bn(target)+"; পরবর্তী ধাপ "+bn(c4));
+    var x=Math.round(c4*1.05);
+    set("exp5",bn(c4)+" × ৫% = "+bn(x)+"; ২০২৬ স্কেলের ধাপ "+bn(c6));
+  }else{
+    set("exp4","");set("exp5","");
+  }
+
+  updateScaleMsg(g);
+  updateManualNote();
+
+  var c5b=c5;
+  if(c5b>0){
+    var inc5=c5b*0.05;
+    var sug=nextStep(c5b,L.length?L:[Math.round((c5b+inc5)/100)*100]);
+    set("c6Hint","৫% ইনক্রিমেন্ট ও ২০২৬ স্কেল অনুযায়ী পরবর্তী ধাপ "+bn(sug));
+    $("btnApplyC6").setAttribute("data-val",String(sug));
+    $("c6Helper").hidden=false;
+  }else{
+    $("c6Helper").hidden=true;
+  }
+
+  var w12=[];
+  if(c2>0&&c4>0&&c4<c2)w12.push("নতুন বেতন পুরোনো বেতনের চেয়ে কম");
+  if(c5>0&&c6>0&&c6<c5)w12.push("ইনক্রিমেন্ট-সহ বেতন ইনক্রিমেন্ট-ছাড়া বেতনের চেয়ে কম হতে পারে না");
+  set("warn12",w12.join("। ")+(w12.length?"।":""));
+
+  var med=num($("medical").value);
+  var oth=num($("other").value);
+  var hB=num($("houseBasic").value);
+  var hP=num($("housePct").value);
+  if(hP>100)hP=100;
+  var house=Math.round(hB*hP/100);
+  set("houseAmt",bn(house)+" ৳");
+  set("houseFormula",bn(hB)+" × "+bnRaw(hP)+"% = "+bn(house));
+
+  var mode="amount";
+  var r=document.querySelector("input[name=dedMode]:checked");
+  if(r)mode=r.value;
+  var dAmt=num($("dedAmount").value);
+  var dPct=num($("dedPct").value);
+  if(dPct>100)dPct=100;
+
+  var basics=[c10,c12,c15];
+  var deds;
+  if(mode==="percent"){
+    deds=basics.map(function(b){return Math.round(b*dPct/100);});
+    set("dedHint","মূল বেতনের "+bnRaw(dPct)+"% = "+bn(deds[0])+" / "+bn(deds[1])+" / "+bn(deds[2])+" টাকা (ক্রমে)");
+  }else{
+    deds=[dAmt,dAmt,dAmt];
+    set("dedHint","প্রতিটি তারিখে "+bn(dAmt)+" টাকা কর্তন হবে");
+  }
+
+  var otherName=($("otherName").value||"").trim();
+  set("lblOther","(+) "+(otherName||"অন্যান্য ভাতা"));
+  var dedName=($("dedName").value||"").trim();
+  set("lblDed","(−) "+(dedName||"কর্তন"));
+
+  var warn3="";
+  var i;
+  for(i=0;i<3;i++){
+    if(deds[i]>basics[i]+med+oth+house){warn3="কর্তন মোট প্রাপ্যের চেয়ে বেশি";break;}
+  }
+  set("warn3",warn3);
+
+  for(i=0;i<3;i++){
+    var gross=basics[i]+med+oth+house;
+    var net=Math.round(gross-deds[i]);
+    var n=i+1;
+    set("stB"+n,bn(basics[i])+" ৳");
+    set("stM"+n,bn(med)+" ৳");
+    set("stO"+n,bn(oth)+" ৳");
+    set("stH"+n,bn(house)+" ৳");
+    set("stG"+n,bn(Math.round(gross))+" ৳");
+    set("stD"+n,bn(deds[i])+" ৳");
+    set("stN"+n,bn(net)+" ৳");
+    set("sum"+n,bn(net)+" ৳");
+    set("w"+n,words(net)+" টাকা মাত্র");
+  }
+
+  set("pName",($("empName").value||"").trim()||"—");
+  set("pPos",($("empPos").value||"").trim()||"—");
+  set("pId",($("empId").value||"").trim()||"—");
+  set("pDept",($("empDept").value||"").trim()||"—");
+
+  var noteEl=$("note");
+  if(noteEl&&$("noteOut")&&$("noteBox")){
+    var note=(noteEl.value||"").trim();
+    set("noteOut",note);
+    $("noteBox").hidden=!note;
+  }
+}
+
+function init(){
+  loadScaleOverrides();
+  load();
+  buildScaleUI();
+  /* সংরক্ষিত গ্রেডে C4/C6 ফাঁকা/শূন্য থাকলে স্বয়ংক্রিয়ভাবে পূরণ করি */
+  if(current2026Grade()&&(!num($("c4").value)||!num($("c6").value))){
+    autoFillFromScale();
+  }
+  NUM_FIELDS.forEach(function(f){if(f==="housePct"||f==="dedPct")bindPct(f);else bindNum(f);});
+  TEXT_FIELDS.forEach(bindText);
+  Array.prototype.forEach.call(document.querySelectorAll("input[name=dedMode]"),function(r){
+    r.addEventListener("change",function(){toggleDed();save();calc();});
+  });
+  toggleDed();
+
+  /* #c2 ম্যানুয়াল পরিবর্তনে C4/C6 পুনর্গণনা + ধাপ dropdown সিঙ্ক */
+  var c2el=$("c2");
+  if(c2el){
+    c2el.addEventListener("input",function(){
+      var g=current2026Grade();
+      if(g){var v=num(this.value);var s15=scale2015[g]||[];var ss=$("stepSel");if(ss)ss.value=(s15.indexOf(v)!==-1)?String(s15.indexOf(v)):"other";autoFillFromScale();}
+    });
+    c2el.addEventListener("blur",function(){
+      var g=current2026Grade();
+      if(g){var v=num(this.value);var s15=scale2015[g]||[];var ss=$("stepSel");if(ss)ss.value=(s15.indexOf(v)!==-1)?String(s15.indexOf(v)):"other";autoFillFromScale();}
+    });
+  }
+
+  $("btnApplyC6").addEventListener("click",function(){
+    var v=this.getAttribute("data-val")||"0";
+    $("c6").value=toBnDigits(v);
+    save();calc();
+  });
+  $("btnPrint").addEventListener("click",function(){window.print();});
+  $("btnReset").addEventListener("click",function(){
+    if(!confirm("সব তথ্য মুছে ফেলা হবে। আপনি কি নিশ্চিত?"))return;
+    try{localStorage.removeItem("salary2026");}catch(e){}
+    NUM_FIELDS.forEach(function(f){var el=$(f);if(el)el.value="০";});
+    TEXT_FIELDS.forEach(function(f){var el=$(f);if(el)el.value="";});
+    var amt=document.querySelector('input[name=dedMode][value="amount"]');
+    if(amt)amt.checked=true;
+    if($("gradeSel"))$("gradeSel").value="";
+    if($("c4Note"))$("c4Note").hidden=true;
+    if($("c6Note"))$("c6Note").hidden=true;
+    if($("gradeConfNote")){$("gradeConfNote").hidden=true;$("gradeConfNote").textContent="";}
+    fill2015Steps();
+    toggleDed();calc();
+  });
+
+  var d=new Date();
+  var ds=("0"+d.getDate()).slice(-2)+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+d.getFullYear();
+  $("printDate").textContent="আজকের তারিখ: "+toBnDigits(ds);
+
+  calc();
+}
+
+if(document.readyState==="loading"){
+  document.addEventListener("DOMContentLoaded",init);
+}else{
+  init();
+}
+
+})();
+</script>
+
+</body>
+</html>
