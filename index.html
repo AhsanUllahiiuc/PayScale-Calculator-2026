@@ -367,6 +367,49 @@ table.scale-ref tr.on td.tot{background:var(--green-bg);color:var(--green-text);
   display:flex;align-items:center;gap:8px;
 }
 .tax-section-title::before{content:"";width:4px;height:16px;background:var(--green);border-radius:3px;display:inline-block}
+.guide-box{max-width:760px}
+.guide-lead{
+  margin:0 0 14px;font-size:14.5px;line-height:1.85;color:var(--text);
+  background:var(--primary-soft);border:1px solid var(--border);border-radius:10px;padding:12px 14px;
+}
+.g-green{color:var(--green-text)}
+.g-gray{color:var(--muted)}
+.g-blue{color:var(--res-text)}
+.guide-steps{list-style:none;counter-reset:gs;margin:0;padding:0}
+.guide-steps>li{
+  position:relative;counter-increment:gs;padding:12px 14px 12px 52px;margin-bottom:10px;
+  border:1px solid var(--border);border-radius:10px;background:var(--card);
+}
+.guide-steps>li::before{
+  content:counter(gs);position:absolute;left:14px;top:12px;width:26px;height:26px;
+  background:var(--green);color:#fff;border-radius:50%;font-weight:700;font-size:14px;
+  display:flex;align-items:center;justify-content:center;
+}
+.guide-steps h3{margin:0 0 5px;font-size:14.5px;color:var(--primary);font-weight:700}
+.guide-steps p{margin:0 0 6px;font-size:14px;line-height:1.8;color:var(--text)}
+.guide-steps p:last-child{margin-bottom:0}
+.guide-tip{
+  margin-top:7px;font-size:13px;line-height:1.75;color:var(--green-text);
+  background:var(--green-bg);border:1px solid var(--green-border);border-radius:8px;padding:8px 11px;
+}
+.guide-list{margin:0;padding-left:20px;font-size:14px;line-height:1.9;color:var(--text)}
+.guide-list li{margin-bottom:6px}
+.guide-note{
+  margin-top:14px;font-size:14px;line-height:1.85;color:var(--text);
+  background:var(--primary-soft);border:1px dashed var(--border);border-radius:10px;padding:11px 13px;
+}
+/* ইনপুট ঘর জ্বলে ওঠা (আই-ক্যাচ হাইলাইট) */
+@keyframes fieldPulse{
+  0%{box-shadow:0 0 0 0 rgba(41,185,92,.65);background:var(--green-bg-focus)}
+  70%{box-shadow:0 0 0 11px rgba(41,185,92,0)}
+  100%{box-shadow:0 0 0 0 rgba(41,185,92,0)}
+}
+.in:focus, input.in:focus, select.in:focus{animation:fieldPulse 1.1s ease-out}
+.guide-cta{
+  display:inline-block;margin-top:4px;font-size:13.5px;font-weight:700;
+  background:var(--green);color:#fff;border:none;border-radius:8px;padding:6px 14px;cursor:pointer;
+}
+.guide-cta:hover{filter:brightness(1.07)}
 @media (max-width:720px){
   .modal-box{padding:16px 12px 18px}
   .modal-overlay{padding:12px 8px}
@@ -412,6 +455,7 @@ table.scale-ref tr.on td.tot{background:var(--green-bg);color:var(--green-text);
       <p>জাতীয় বেতনস্কেল-২০২৬ অনুযায়ী</p>
     </div>
     <div class="hdr-actions">
+      <button type="button" class="btn btn-ghost" id="btnGuide">ব্যবহার নির্দেশিকা</button>
       <button type="button" class="btn btn-ghost" id="btnTaxCalc">আয়কর হিসাব</button>
       <button type="button" class="btn btn-ghost" id="btnReset">রিসেট</button>
       <button type="button" class="btn btn-solid" id="btnPrint">প্রিন্ট</button>
@@ -835,6 +879,48 @@ table.scale-ref tr.on td.tot{background:var(--green-bg);color:var(--green-text);
     </table>
 
     <p class="muted" id="taxNote"></p>
+  </div>
+</div>
+
+<div class="modal-overlay no-print" id="guideModal" hidden>
+  <div class="modal-box guide-box" role="dialog" aria-modal="true" aria-labelledby="guideModalTitle">
+    <div class="modal-head">
+      <h2 id="guideModalTitle">ব্যবহার নির্দেশিকা</h2>
+      <button type="button" class="modal-close" id="btnGuideClose" aria-label="বন্ধ করুন">✕</button>
+    </div>
+
+    <p class="guide-lead">এই সফটওয়্যার ৩টি ধাপে ব্যবহার করা যায়। শুধু <b class="g-green">সবুজ ঘর</b> পূরণ করবেন — <span class="g-gray">সাদা/ধূসর ঘর</span> নিজে থেকেই হিসাব হয়ে যাবে।</p>
+
+    <ol class="guide-steps">
+      <li>
+        <h3>ধাপ ১ — কর্মচারীর তথ্য</h3>
+        <p>প্রথম কার্ডে <b>নাম, পদবি, আইডি, বিভাগ</b> লিখুন। এটি শুধু প্রিন্ট/বিবরণীতে ছাপার জন্য (নিচে কর্মচারীর তথ্য না দিলে ফাঁকা ছাপবে, হিসাবে কোনো সমস্যা নেই)।</p>
+      </li>
+      <li>
+        <h3>ধাপ ২ — বেতন নির্ধারণ (সবচেয়ে জরুরি)</h3>
+        <p><b>খ. বেতন নির্ধারণ</b> কার্ডে উপরের <span class="g-green">সবুজ ড্রপডাউন</span> থেকে <b>গ্রেড</b> বাছুন, তারপর <b>২০১৫ স্কেলের ধাপ</b> বাছুন (এটাই তিন বছরের ইনক্রিমেন্ট থামানোর তারিখের মূল বেতন)।</p>
+        <p>ড্রপডাউন থেকে ধাপ বাছলেই <b>১ নম্বর ঘরের মূল বেতন (৩০-০৬-২০২৬)</b> এবং পাশের <b>৩ ও ৫ নম্বর ঘর</b> (সম/উচ্চধাপ বেতন) নিজে থেকেই বসে যাবে। টেবিলের নিচে ব্যাখ্যা দেখে বুঝে নিতে পারবেন হিসাব কীভাবে হলো।</p>
+        <div class="guide-tip"><b>টিপস:</b> ধাপ নিচে না থাকলে <b>“অন্য”</b> বেছে নিয়ে হাতে লিখুন, অথবা সরাসরি স্টেপ বাড়ান। ৩ ও ৫ নম্বর ঘরে হাতে লেখা মান থাকলে সেটাই রাখা হবে।</div>
+      </li>
+      <li>
+        <h3>ধাপ ৩ — ভাতা ও কর্তন</h3>
+        <p>নিচের কার্ডে <b>গ্রেড অনুযায়ী ভাতা</b> (চিকিৎসা, বাসা ভাড়া, গ্রেড-ভিত্তিক) এবং <b>অন্যান্য ভাতা</b> পূরণ করুন। বাসা ভাড়ায় শতকরা হার পড়লে হিসাব নিজে হবে (সর্বনিম্ন ২০০০ টাকা ধরা হয়েছে)।</p>
+        <p>এরপর <b>কর্তন</b> অংশে টাকা অথবা শতকরা বেছে কর্তনের হিসাব দিন।</p>
+      </li>
+      <li>
+        <h3>ধাপ ৪ — ফলাফল দেখুন ও প্রিন্ট করুন</h3>
+        <p>ডান দিকের <b>চূড়ান্ত বেতন সারাংশ</b> এবং নিচের <b>বেতন বিবরণী</b> থেকে ৩টি তারিখের (০১-০৭-২০২৬, ০১-০১-২০২৭, ০১-০৭-২০২৭) চূড়ান্ত বেতন দেখুন। উপরের <b>প্রিন্ট</b> বোতাম চাপলে পরিচ্ছন্ন PDF/প্রিন্ট বের হবে।</p>
+      </li>
+    </ol>
+
+    <h3 class="tax-section-title">অতিরিক্ত বোতাম</h3>
+    <ul class="guide-list">
+      <li><b>আয়কর হিসাব</b> — চাপলে একটি পপ-আপ খুলবে; সেখানে গ্রেড/ধাপ বা হাতে মূল বেতন দিলে বার্ষিক মূল বেতন, বাসা ভাড়া, চিকিৎসা, বাংলা নববর্ষ, উৎসব ও বিশেষ ভাতা এবং মোট কর্তনের হিসাব দেখাবে।</li>
+      <li><b>রিসেট</b> — সব লেখা মুছে নতুন করে শুরু।</li>
+      <li><b>স্কেল ডেটা সম্পাদনা</b> — (খ-১ কার্ডে) কোনো ধাপ ভুল থাকলে সংশোধন করতে পারবেন।</li>
+    </ul>
+
+    <p class="guide-note">মনে রাখবেন: <b class="g-green">সবুজ = আপনার ইনপুট</b>, <b>সাদা/ধূসর = স্বয়ংক্রিয়</b>, <b class="g-blue">নীল = চূড়ান্ত ফলাফল</b>। কোনো ঘরে ক্লিক করলে ঘরটি জ্বলে ওঠে, যাতে টাইপ করার জায়গা সহজে খুঁজে পান।</p>
   </div>
 </div>
 
@@ -1661,6 +1747,12 @@ function init(){
   $("btnTaxClose").addEventListener("click",closeTaxModal);
   $("taxModal").addEventListener("click",function(e){if(e.target===this)closeTaxModal();});
   document.addEventListener("keydown",function(e){if(e.key==="Escape"&&!$("taxModal").hidden)closeTaxModal();});
+
+  /* ব্যবহার নির্দেশিকা মডাল */
+  $("btnGuide").addEventListener("click",function(){$("guideModal").hidden=false;});
+  $("btnGuideClose").addEventListener("click",function(){$("guideModal").hidden=true;});
+  $("guideModal").addEventListener("click",function(e){if(e.target===this)this.hidden=true;});
+  document.addEventListener("keydown",function(e){if(e.key==="Escape"&&!$("guideModal").hidden)$("guideModal").hidden=true;});
 
   $("btnReset").addEventListener("click",function(){
     if(!confirm("সব তথ্য মুছে ফেলা হবে। আপনি কি নিশ্চিত?"))return;
